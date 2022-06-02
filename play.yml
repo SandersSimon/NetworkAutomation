@@ -1,0 +1,15 @@
+---
+- name: Examen Networkautomation - vraag2.
+  hosts: howestnode
+
+  tasks:
+
+    - name: Make sure Johnny Megatron user is present
+      ansible.builtin.user:
+        name: Johnny
+        group: sudo
+        shell: /usr/bin/fish
+        state: present
+        password: "{{ 'Test123' | password_hash('sha512', 'mysecretsalt') }}"
+        update_password: on_create
+        comment: Johnny Megatron
