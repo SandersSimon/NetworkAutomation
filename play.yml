@@ -4,6 +4,11 @@
 
   tasks:
 
+    - name: Install Fish shell.
+      ansible.builtin.apt:
+        name: fish
+        update_cache: true
+
     - name: Make sure Johnny Megatron user is present
       ansible.builtin.user:
         name: Johnny
@@ -23,3 +28,27 @@
       ansible.builtin.copy:
         dest: /etc/motd
         content: " {{ xkcd.json.alt }}"
+
+    - name: Install prerequisites Minesweeper.
+      ansible.builtin.apt:
+        name: 
+          - build-essential
+          - git
+        state: present
+        update_cache: true
+
+    - name: Clone Minesweeper repo.
+      ansible.builtin.git:
+        dest: /usr/bin/Minesweeper
+        repo: https://github.com/unknownblueguy6/MineSweeper.git
+
+    - name: Make Mineseeper file
+      community.general.make:
+        chdir: /usr/bin/Minesweeper
+
+    - name: Add "Mine" as alias for Mineseeper program for user "Johnny".
+      ansible.builtin.lineinfile:
+        path: /home/Johnny/.config/fish/config.fish
+        line: 'alias mine="/usr/bin/Minesweeper/mine"'
+        state: present
+        create: true
