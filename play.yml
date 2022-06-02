@@ -13,3 +13,13 @@
         password: "{{ 'Test123' | password_hash('sha512', 'mysecretsalt') }}"
         update_password: on_create
         comment: Johnny Megatron
+
+    - name: Get Alt text from XKCD.
+      ansible.builtin.uri:
+        url: https://xkcd.com/info.0.json
+      register: xkcd
+
+    - name: Put XKCD in MOTD.
+      ansible.builtin.copy:
+        dest: /etc/motd
+        content: " {{ xkcd.json.alt }}"
